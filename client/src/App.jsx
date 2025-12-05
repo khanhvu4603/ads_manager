@@ -100,7 +100,6 @@ function App() {
 
     // For video, we wait for onEnded event
     if (currentItem.type === 'video' && videoRef.current) {
-      videoRef.current.src = currentItem.url;
       videoRef.current.play().catch(e => console.error("Autoplay failed", e));
     }
   }, [playIndex, mediaItems]); // Depend on playIndex, not currentIndex
@@ -117,7 +116,9 @@ function App() {
             />
           ) : (
             <video
+              key={playIndex}
               ref={videoRef}
+              src={mediaItems[currentIndex].url}
               className="w-full h-full object-contain"
               onEnded={handleNext}
               muted

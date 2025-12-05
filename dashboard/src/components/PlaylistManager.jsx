@@ -15,20 +15,28 @@ function PlaylistManager() {
     const [editingPlaylist, setEditingPlaylist] = useState(null);
     const [newName, setNewName] = useState('');
     const [showPreviewModal, setShowPreviewModal] = useState(false);
-    const [previewIndex, setPreviewIndex] = useState(0);
+    const [playIndex, setPlayIndex] = useState(0); // Ever-increasing counter
     const [isPlaying, setIsPlaying] = useState(false);
     const [showDeployModal, setShowDeployModal] = useState(false);
     const [deploying, setDeploying] = useState(false);
     const videoRef = useRef(null);
 
+    // Derived previewIndex
+    const previewIndex = selectedPlaylist?.items?.length
+        ? ((playIndex % selectedPlaylist.items.length) + selectedPlaylist.items.length) % selectedPlaylist.items.length
+        : 0;
+
     useEffect(() => {
+        console.log("PlaylistManager mounted");
         loadPlaylists();
         loadMedia();
     }, []);
 
     const loadPlaylists = async () => {
         try {
+            console.log("Fetching playlists...");
             const res = await getPlaylists();
+            console.log("Playlists loaded:", res.data);
             setPlaylists(res.data);
         } catch (error) {
             console.error('Failed to load playlists', error);
@@ -173,10 +181,9 @@ function PlaylistManager() {
         }
     };
 
-
     // Preview handlers
     const handleOpenPreview = () => {
-        setPreviewIndex(0);
+        setPlayIndex(0);
         setIsPlaying(true);
         setShowPreviewModal(true);
     };
@@ -184,17 +191,17 @@ function PlaylistManager() {
     const handleClosePreview = () => {
         setShowPreviewModal(false);
         setIsPlaying(false);
-        setPreviewIndex(0);
+        setPlayIndex(0);
     };
 
     const handleNext = () => {
         if (!selectedPlaylist?.items) return;
-        setPreviewIndex((prev) => (prev + 1) % selectedPlaylist.items.length);
+        setPlayIndex(prev => prev + 1);
     };
 
     const handlePrev = () => {
         if (!selectedPlaylist?.items) return;
-        setPreviewIndex((prev) => (prev - 1 + selectedPlaylist.items.length) % selectedPlaylist.items.length);
+        setPlayIndex(prev => prev - 1);
     };
 
     // Auto-advance for images
@@ -212,7 +219,7 @@ function PlaylistManager() {
             }, duration);
             return () => clearTimeout(timer);
         }
-    }, [isPlaying, previewIndex, showPreviewModal]);
+    }, [isPlaying, previewIndex, showPreviewModal, playIndex]);
 
     // Video ended handler
     useEffect(() => {
@@ -228,7 +235,7 @@ function PlaylistManager() {
 
         video.addEventListener('ended', handleVideoEnd);
         return () => video.removeEventListener('ended', handleVideoEnd);
-    }, [previewIndex]);
+    }, [previewIndex, playIndex]);
 
     // Deploy handlers
     const handleDeploy = async () => {
@@ -551,7 +558,7 @@ function PlaylistManager() {
                                 className="max-w-full max-h-full object-contain"
                                 autoPlay
                                 muted
-                                key={previewIndex}
+                                key={playIndex} // Use playIndex to force remount even if index wraps
                             />
                         )}
                     </div>
