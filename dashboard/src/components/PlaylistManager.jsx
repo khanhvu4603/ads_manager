@@ -205,7 +205,8 @@ function PlaylistManager() {
 
         // Only auto-advance for images
         if (currentItem.type === 'image') {
-            const duration = currentItem.duration * 1000;
+            // Default to 5 seconds if duration is missing or 0
+            const duration = (currentItem.duration || 5) * 1000;
             const timer = setTimeout(() => {
                 handleNext();
             }, duration);
@@ -217,6 +218,9 @@ function PlaylistManager() {
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;
+
+        // Force play to ensure seamless transition
+        video.play().catch(e => console.log("Auto-play prevented:", e));
 
         const handleVideoEnd = () => {
             handleNext();

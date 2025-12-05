@@ -19,7 +19,11 @@ export class DevicesService {
             device.lastSeen = new Date();
             if (name) device.name = name;
         }
-        return this.devicesRepository.save(device);
+        const savedDevice = await this.devicesRepository.save(device);
+        // Return device with playlist
+        const found = await this.findOne(savedDevice.id);
+        if (!found) throw new Error('Device not found after save');
+        return found;
     }
 
     findAll(): Promise<Device[]> {
