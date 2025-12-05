@@ -4,17 +4,32 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
 import { Monitor, Wifi, WifiOff, Clock, PlaySquare } from 'lucide-react';
 import { cn } from '../lib/utils';
 
+import io from 'socket.io-client';
+
+const SOCKET_URL = 'http://localhost:4000';
+
 function DeviceList() {
     const [devices, setDevices] = useState([]);
 
     useEffect(() => {
         loadDevices();
+
+        const socket = io(SOCKET_URL);
+        socket.on('device-status-update', ({ deviceId, status }) => {
+            setDevices(prev => prev.map(d =>
+                d.id === deviceId ? { ...d, status, lastSeen: new Date() } : d
+            ));
+        });
+
+        return () => socket.disconnect();
     }, []);
 
     const loadDevices = async () => {
         try {
             const res = await getDevices();
-            setDevices(res.data);
+            // Filter to show only "Main Device" or ID 1 as requested
+            const mainDevices = res.data.filter(d => d.name === 'Main Device' || d.id === 1);
+            setDevices(mainDevices.length > 0 ? mainDevices : res.data.slice(0, 1));
         } catch (error) {
             console.error('Failed to load devices', error);
         }

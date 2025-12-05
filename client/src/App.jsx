@@ -20,7 +20,8 @@ function App() {
   const initializeDevice = async () => {
     let id = deviceId;
     try {
-      const res = await registerDevice('127.0.0.1', `Client-${Math.floor(Math.random() * 1000)}`);
+      // Always register as "Main Device"
+      const res = await registerDevice('127.0.0.1', 'Main Device');
       if (res.data && res.data.id) {
         id = res.data.id;
         setDeviceId(id);
@@ -34,6 +35,10 @@ function App() {
     const socket = io(SOCKET_URL);
     socket.on('connect', () => {
       console.log('Connected to WebSocket');
+      // Register device with socket for status tracking
+      if (id) {
+        socket.emit('register-device', { deviceId: id });
+      }
     });
 
     socket.on('playlistDeployed', (playlist) => {
