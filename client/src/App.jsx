@@ -9,7 +9,7 @@ function App() {
   const [deviceId, setDeviceId] = useState(localStorage.getItem('deviceId'));
   const [playlist, setPlaylist] = useState(null);
   const [mediaItems, setMediaItems] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [playIndex, setPlayIndex] = useState(0); // Ever-increasing counter
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
 
@@ -62,7 +62,7 @@ function App() {
     // Clear old cache
     clearOldCache(items.map(item => item.url.startsWith('http') ? item.url : `http://localhost:4000${item.url}`));
     setIsPlaying(true);
-    setCurrentIndex(0);
+    setPlayIndex(0); // Reset counter on new playlist
   };
 
   const fetchPlaylist = async (deviceData) => {
@@ -73,8 +73,11 @@ function App() {
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % mediaItems.length);
+    setPlayIndex((prev) => prev + 1); // Always increment to trigger effect
   };
+
+  // Derived current index
+  const currentIndex = mediaItems.length > 0 ? playIndex % mediaItems.length : 0;
 
   // Auto-advance logic
   useEffect(() => {
@@ -95,7 +98,7 @@ function App() {
       videoRef.current.src = currentItem.url;
       videoRef.current.play().catch(e => console.error("Autoplay failed", e));
     }
-  }, [currentIndex, mediaItems]);
+  }, [playIndex, mediaItems]); // Depend on playIndex, not currentIndex
 
   return (
     <div className="bg-black h-screen w-screen flex items-center justify-center overflow-hidden">

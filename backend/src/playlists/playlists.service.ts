@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Playlist } from './playlist.entity';
+import { Device } from '../devices/device.entity';
 import { EventsGateway } from '../events/events.gateway';
 
 @Injectable()
@@ -9,6 +10,8 @@ export class PlaylistsService {
     constructor(
         @InjectRepository(Playlist)
         private playlistsRepository: Repository<Playlist>,
+        @InjectRepository(Device)
+        private devicesRepository: Repository<Device>,
         private eventsGateway: EventsGateway,
     ) { }
 
@@ -49,6 +52,13 @@ export class PlaylistsService {
         if (!playlist) {
             throw new Error('Playlist not found');
         }
+
+        // Update all devices to use this playlist
+        await this.devicesRepository.createQueryBuilder()
+            .update()
+            .set({ playlist: { id: playlist.id } })
+            .execute();
+
         // Broadcast to all connected clients
         this.eventsGateway.server.emit('playlistDeployed', playlist);
         return { success: true, message: 'Playlist deployed successfully', playlist };
