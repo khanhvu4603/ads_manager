@@ -9,7 +9,6 @@ import UserManager from './components/UserManager';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
 import AuthCallback from './pages/AuthCallback';
 
 function App() {
@@ -19,7 +18,6 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
 
           {/* Protected Routes */}
@@ -45,9 +43,9 @@ function App() {
               </ProtectedRoute>
             }
           />
-        </Routes>
-      </Router>
-    </AuthProvider>
+        </Routes >
+      </Router >
+    </AuthProvider >
   );
 }
 
