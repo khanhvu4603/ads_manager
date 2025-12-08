@@ -4,7 +4,7 @@ import { Wifi, WifiOff } from 'lucide-react';
 // CÁCH THÊM LOGO:
 // 1. Copy file ảnh logo (ví dụ: logo.png) vào thư mục: client/src/assets/
 // 2. Uncomment dòng import bên dưới:
-import logo from 'E:/SOLARZ/ads_manager/client/src/assets/logo.png';
+import logo from '../assets/logo.png';
 
 const StatusBar = () => {
     const [time, setTime] = useState(new Date());
