@@ -367,9 +367,9 @@ function PlaylistManager() {
                                                         </div>
                                                         <div className="w-16 h-9 bg-gray-900 rounded overflow-hidden flex-shrink-0">
                                                             {item.type === 'image' ? (
-                                                                <img src={`http://localhost:4000${item.url}`} className="w-full h-full object-cover" alt={item.filename} />
+                                                                <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${item.url}`} className="w-full h-full object-cover" alt={item.filename} />
                                                             ) : (
-                                                                <video src={`http://localhost:4000${item.url}`} className="w-full h-full object-cover" />
+                                                                <video src={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${item.url}`} className="w-full h-full object-cover" />
                                                             )}
                                                         </div>
                                                         <div className="flex-1 min-w-0">
@@ -434,9 +434,9 @@ function PlaylistManager() {
                                                     onClick={() => handleAddToPlaylist(selectedPlaylist, item)}
                                                 >
                                                     {item.mimeType?.startsWith('image/') ? (
-                                                        <img src={`http://localhost:4000${item.url}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform" alt={item.filename} />
+                                                        <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${item.url}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform" alt={item.filename} />
                                                     ) : (
-                                                        <video src={`http://localhost:4000${item.url}`} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                                                        <video src={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${item.url}`} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                                                     )}
                                                     <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/0 transition-colors">
                                                         <Plus className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition-all" />
@@ -547,14 +547,14 @@ function PlaylistManager() {
                     <div className="flex-1 flex items-center justify-center">
                         {selectedPlaylist.items[previewIndex]?.type === 'image' ? (
                             <img
-                                src={`http://localhost:4000${selectedPlaylist.items[previewIndex].url}`}
+                                src={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${selectedPlaylist.items[previewIndex].url}`}
                                 alt={selectedPlaylist.items[previewIndex].filename}
                                 className="max-w-full max-h-full object-contain"
                             />
                         ) : (
                             <video
                                 ref={videoRef}
-                                src={`http://localhost:4000${selectedPlaylist.items[previewIndex].url}`}
+                                src={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${selectedPlaylist.items[previewIndex].url}`}
                                 className="max-w-full max-h-full object-contain"
                                 autoPlay
                                 muted

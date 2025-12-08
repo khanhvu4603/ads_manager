@@ -3,7 +3,9 @@ import io from 'socket.io-client';
 import { registerDevice } from './api';
 import { cacheVideo, clearOldCache } from './utils/cache';
 
-const SOCKET_URL = 'http://localhost:4000';
+import StatusBar from './components/StatusBar';
+
+const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 function App() {
   const [deviceId, setDeviceId] = useState(localStorage.getItem('deviceId'));
@@ -53,7 +55,7 @@ function App() {
   const updateMediaCache = async (items) => {
     const cachedItems = [];
     for (const item of items) {
-      const fullUrl = item.url.startsWith('http') ? item.url : `http://localhost:4000${item.url}`;
+      const fullUrl = item.url.startsWith('http') ? item.url : `${SOCKET_URL}${item.url}`;
       const cachedUrl = await cacheVideo(fullUrl);
       if (cachedUrl) {
         cachedItems.push({
@@ -65,7 +67,7 @@ function App() {
     }
     setMediaItems(cachedItems);
     // Clear old cache
-    clearOldCache(items.map(item => item.url.startsWith('http') ? item.url : `http://localhost:4000${item.url}`));
+    clearOldCache(items.map(item => item.url.startsWith('http') ? item.url : `${SOCKET_URL}${item.url}`));
     setIsPlaying(true);
     setPlayIndex(0); // Reset counter on new playlist
   };
@@ -105,7 +107,8 @@ function App() {
   }, [playIndex, mediaItems]); // Depend on playIndex, not currentIndex
 
   return (
-    <div className="bg-black h-screen w-screen flex items-center justify-center overflow-hidden">
+    <div className="bg-black h-screen w-screen flex items-center justify-center overflow-hidden relative">
+      <StatusBar />
       {mediaItems.length > 0 ? (
         <>
           {mediaItems[currentIndex].type === 'image' ? (

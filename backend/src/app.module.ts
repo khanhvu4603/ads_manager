@@ -9,6 +9,8 @@ import { DevicesModule } from './devices/devices.module';
 import { PlaylistsModule } from './playlists/playlists.module';
 import { MediaModule } from './media/media.module';
 import { EventsModule } from './events/events.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -30,13 +32,15 @@ import { EventsModule } from './events/events.module';
       inject: [ConfigService],
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
+      rootPath: join(process.cwd(), 'uploads'),
       serveRoot: '/uploads',
     }),
     DevicesModule,
     PlaylistsModule,
     MediaModule,
     EventsModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

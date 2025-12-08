@@ -169,10 +169,10 @@ function MediaLibrary() {
                         <Card key={item.id} className="group overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300">
                             <div className="relative aspect-video bg-gray-900">
                                 {item.mimeType?.startsWith('image/') ? (
-                                    <img src={`http://localhost:4000${item.url}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt={item.filename} />
+                                    <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${item.url}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt={item.filename} />
                                 ) : (
                                     <>
-                                        <video src={`http://localhost:4000${item.url}`} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" />
+                                        <video src={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${item.url}`} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" />
                                         <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm">
                                             <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/50">
                                                 <Play className="w-5 h-5 text-white fill-white" />
@@ -341,9 +341,9 @@ function MediaLibrary() {
                         {/* Preview */}
                         <div className="mb-4 bg-gray-900 rounded-xl overflow-hidden aspect-video">
                             {editingMedia.mimeType?.startsWith('image/') ? (
-                                <img src={`http://localhost:4000${editingMedia.url}`} className="w-full h-full object-cover" alt={editingMedia.filename} />
+                                <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${editingMedia.url}`} className="w-full h-full object-cover" alt={editingMedia.filename} />
                             ) : (
-                                <video src={`http://localhost:4000${editingMedia.url}`} className="w-full h-full object-cover" controls />
+                                <video src={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${editingMedia.url}`} className="w-full h-full object-cover" controls />
                             )}
                         </div>
 
