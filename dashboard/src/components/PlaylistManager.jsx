@@ -259,8 +259,8 @@ function PlaylistManager() {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Playlists</h2>
-                    <p className="text-gray-500">Create and manage video sequences</p>
+                    <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Playlists</h2>
+                    <p className="text-gray-500 dark:text-gray-400">Create and manage video sequences</p>
                 </div>
             </div>
 
@@ -277,6 +277,7 @@ function PlaylistManager() {
                                     value={newPlaylistName}
                                     onChange={(e) => setNewPlaylistName(e.target.value)}
                                     placeholder="New Playlist Name"
+                                    className="dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                                 />
                                 <Button onClick={handleCreate} size="icon" variant="primary">
                                     <Plus className="w-5 h-5" />
@@ -290,20 +291,20 @@ function PlaylistManager() {
                                     className={cn(
                                         "p-3 rounded-xl cursor-pointer transition-all border flex items-center justify-between group",
                                         selectedPlaylist?.id === playlist.id
-                                            ? "bg-blue-50 border-blue-200 shadow-sm"
-                                            : "bg-white border-transparent hover:bg-gray-50 hover:border-gray-200"
+                                            ? "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 shadow-sm"
+                                            : "bg-white dark:bg-gray-800 border-transparent hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-200 dark:hover:border-gray-600"
                                     )}
                                 >
                                     <div className="flex items-center gap-3 flex-1">
                                         <div className={cn(
                                             "w-10 h-10 rounded-lg flex items-center justify-center",
-                                            selectedPlaylist?.id === playlist.id ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-500"
+                                            selectedPlaylist?.id === playlist.id ? "bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
                                         )}>
                                             <ListVideo className="w-5 h-5" />
                                         </div>
                                         <div>
-                                            <div className="font-medium text-sm">{playlist.name}</div>
-                                            <div className="text-xs text-gray-500">{playlist.items?.length || 0} videos</div>
+                                            <div className="font-medium text-sm text-gray-900 dark:text-gray-100">{playlist.name}</div>
+                                            <div className="text-xs text-gray-500 dark:text-gray-400">{playlist.items?.length || 0} videos</div>
                                         </div>
                                     </div>
                                     <button
@@ -325,8 +326,8 @@ function PlaylistManager() {
                         <Card className="flex-1 flex flex-col">
                             <CardHeader className="flex flex-row items-center justify-between">
                                 <CardTitle className="flex items-center gap-2">
-                                    <span className="text-gray-500 font-normal">Editing:</span>
-                                    {selectedPlaylist.name}
+                                    <span className="text-gray-500 dark:text-gray-400 font-normal">Editing:</span>
+                                    <span className="text-gray-900 dark:text-gray-100">{selectedPlaylist.name}</span>
                                 </CardTitle>
                                 <div className="flex items-center gap-2">
                                     <Button
@@ -352,17 +353,17 @@ function PlaylistManager() {
                             <CardContent className="flex-1 overflow-y-auto">
                                 <div className="space-y-6">
                                     <div>
-                                        <h4 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wider">Current Sequence</h4>
+                                        <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">Current Sequence</h4>
                                         {selectedPlaylist.items?.length === 0 ? (
-                                            <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50/50">
-                                                <Film className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                                                <p className="text-gray-500">No videos in this playlist yet</p>
+                                            <div className="text-center py-12 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-800/50">
+                                                <Film className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+                                                <p className="text-gray-500 dark:text-gray-400">No videos in this playlist yet</p>
                                             </div>
                                         ) : (
                                             <div className="space-y-2">
                                                 {selectedPlaylist.items?.map((item, idx) => (
-                                                    <div key={idx} className="flex items-center gap-4 p-3 bg-white border border-gray-100 rounded-xl shadow-sm group">
-                                                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500">
+                                                    <div key={idx} className="flex items-center gap-4 p-3 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-sm group">
+                                                        <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-500 dark:text-gray-400">
                                                             {idx + 1}
                                                         </div>
                                                         <div className="w-16 h-9 bg-gray-900 rounded overflow-hidden flex-shrink-0">
@@ -373,15 +374,15 @@ function PlaylistManager() {
                                                             )}
                                                         </div>
                                                         <div className="flex-1 min-w-0">
-                                                            <div className="font-medium text-sm text-gray-900 truncate" title={item.filename}>{item.filename}</div>
-                                                            <div className="text-xs text-gray-500 flex items-center gap-2">
-                                                                <span className="uppercase bg-gray-100 px-1.5 rounded">{item.type}</span>
+                                                            <div className="font-medium text-sm text-gray-900 dark:text-gray-100 truncate" title={item.filename}>{item.filename}</div>
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                                                                <span className="uppercase bg-gray-100 dark:bg-gray-700 px-1.5 rounded">{item.type}</span>
                                                                 {item.type === 'image' && (
                                                                     <div className="flex items-center gap-1">
                                                                         <span>Duration:</span>
                                                                         <input
                                                                             type="number"
-                                                                            className="w-12 px-1 py-0.5 border rounded text-center"
+                                                                            className="w-12 px-1 py-0.5 border rounded text-center bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                                                                             value={item.duration}
                                                                             onChange={(e) => handleUpdateDuration(selectedPlaylist, idx, e.target.value)}
                                                                         />
@@ -425,7 +426,7 @@ function PlaylistManager() {
                                     </div>
 
                                     <div>
-                                        <h4 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wider">Available Media</h4>
+                                        <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">Available Media</h4>
                                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                             {media.map((item) => (
                                                 <div
@@ -455,7 +456,7 @@ function PlaylistManager() {
                             </CardContent>
                         </Card>
                     ) : (
-                        <div className="flex-1 flex flex-col items-center justify-center text-gray-400 bg-gray-50/50 rounded-2xl border-2 border-dashed border-gray-200">
+                        <div className="flex-1 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-gray-50/50 dark:bg-gray-800/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700">
                             <ListVideo className="w-16 h-16 mb-4 opacity-20" />
                             <p>Select a playlist to start editing</p>
                         </div>

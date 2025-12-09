@@ -54,7 +54,7 @@ const LoginPage = () => {
                             <img src={logo} alt="Logo" className="w-full h-full object-contain" />
                         </div>
                         <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
-                        <p className="text-slate-400">Sign in to manage your digital signage</p>
+                        <p className="text-slate-400">Please sign in to comeback</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">

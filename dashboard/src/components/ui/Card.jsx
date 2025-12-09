@@ -3,18 +3,18 @@ import { cn } from '../../lib/utils';
 
 export function Card({ className, children, ...props }) {
     return (
-        <div className={cn("bg-white/70 backdrop-blur-xl shadow-sm border border-white/50 rounded-2xl overflow-hidden transition-all hover:shadow-md", className)} {...props}>
+        <div className={cn("bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl shadow-sm border border-white/50 dark:border-gray-700/50 rounded-2xl overflow-hidden transition-all hover:shadow-md", className)} {...props}>
             {children}
         </div>
     );
 }
 
 export function CardHeader({ className, children, ...props }) {
-    return <div className={cn("px-6 py-4 border-b border-gray-100/50", className)} {...props}>{children}</div>;
+    return <div className={cn("px-6 py-4 border-b border-gray-100/50 dark:border-gray-700/50", className)} {...props}>{children}</div>;
 }
 
 export function CardTitle({ className, children, ...props }) {
-    return <h3 className={cn("text-lg font-semibold text-gray-900", className)} {...props}>{children}</h3>;
+    return <h3 className={cn("text-lg font-semibold text-gray-900 dark:text-gray-100", className)} {...props}>{children}</h3>;
 }
 
 export function CardContent({ className, children, ...props }) {

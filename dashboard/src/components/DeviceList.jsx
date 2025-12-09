@@ -39,16 +39,16 @@ function DeviceList() {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Devices</h2>
-                    <p className="text-gray-500">Manage your connected screens</p>
+                    <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Devices</h2>
+                    <p className="text-gray-500 dark:text-gray-400">Manage your connected screens</p>
                 </div>
                 <div className="flex gap-2">
                     <div className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium flex items-center gap-1">
                         <span className="w-2 h-2 bg-green-500 rounded-full"></span>
                         {devices.filter(d => d.status === 'online').length} Online
                     </div>
-                    <div className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium flex items-center gap-1">
-                        <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
+                    <div className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs font-medium flex items-center gap-1">
+                        <span className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full"></span>
                         {devices.filter(d => d.status !== 'online').length} Offline
                     </div>
                 </div>
@@ -64,39 +64,39 @@ function DeviceList() {
                             {device.status === 'online' ? (
                                 <Wifi className="h-4 w-4 text-green-500" />
                             ) : (
-                                <WifiOff className="h-4 w-4 text-gray-400" />
+                                <WifiOff className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                             )}
                         </CardHeader>
                         <CardContent>
                             <div className="flex items-center gap-4 mb-4">
                                 <div className={cn(
                                     "w-12 h-12 rounded-2xl flex items-center justify-center transition-colors",
-                                    device.status === 'online' ? "bg-blue-50 text-blue-600" : "bg-gray-100 text-gray-400"
+                                    device.status === 'online' ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400" : "bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
                                 )}>
                                     <Monitor className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <div className="text-2xl font-bold">{device.ip}</div>
-                                    <p className="text-xs text-gray-500">ID: #{device.id}</p>
+                                    <div className="text-2xl font-bold text-gray-900 dark:text-white">{device.ip}</div>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">ID: #{device.id}</p>
                                 </div>
                             </div>
 
-                            <div className="space-y-2 pt-2 border-t border-gray-100">
+                            <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-700">
                                 <div className="flex items-center justify-between text-sm">
-                                    <div className="flex items-center gap-2 text-gray-500">
+                                    <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
                                         <PlaySquare className="w-4 h-4" />
                                         <span>Playlist</span>
                                     </div>
-                                    <span className="font-medium text-gray-900">
+                                    <span className="font-medium text-gray-900 dark:text-gray-200">
                                         {device.playlist ? device.playlist.name : 'None'}
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between text-sm">
-                                    <div className="flex items-center gap-2 text-gray-500">
+                                    <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
                                         <Clock className="w-4 h-4" />
                                         <span>Last Seen</span>
                                     </div>
-                                    <span className="text-gray-900">
+                                    <span className="text-gray-900 dark:text-gray-200">
                                         {new Date(device.lastSeen).toLocaleTimeString()}
                                     </span>
                                 </div>
