@@ -36,54 +36,34 @@ export class MediaService {
                 url: mediaUrl,
                 mimeType: mimeType,
             };
-        }
-
-        const media = this.mediaRepository.create(mediaData);
-        return this.mediaRepository.save(media);
-    }
-
-    saveCloudinaryMedia(file: Express.Multer.File, url: string) {
-        const mediaData = {
-            filename: file.originalname,
-            url: url,
-            mimeType: file.mimetype,
-        };
-        const media = this.mediaRepository.create(mediaData);
-        return this.mediaRepository.save(media);
-    }
-
-    findAll() {
-        return this.mediaRepository.find();
-    }
-
     async remove(id: number) {
-        // Get the media record first to check if we need to delete a file
-        const media = await this.mediaRepository.findOne({ where: { id } });
+                // Get the media record first to check if we need to delete a file
+                const media = await this.mediaRepository.findOne({ where: { id } });
 
-        if (media && media.url.startsWith('/uploads/')) {
-            // Delete the physical file (only for local uploads, not external URLs)
-            const fs = require('fs');
-            const path = require('path');
-            const filePath = path.join(process.cwd(), 'uploads', path.basename(media.url));
+                if (media && media.url.startsWith('/uploads/')) {
+                    // Delete the physical file (only for local uploads, not external URLs)
+                    const fs = require('fs');
+                    const path = require('path');
+                    const filePath = path.join(process.cwd(), 'uploads', path.basename(media.url));
 
-            try {
-                if (fs.existsSync(filePath)) {
-                    fs.unlinkSync(filePath);
+                    try {
+                        if (fs.existsSync(filePath)) {
+                            fs.unlinkSync(filePath);
+                        }
+                    } catch (error) {
+                        console.error('Failed to delete file:', error);
+                    }
                 }
-            } catch (error) {
-                console.error('Failed to delete file:', error);
-            }
-        }
 
-        return this.mediaRepository.delete(id);
-    }
+                return this.mediaRepository.delete(id);
+            }
 
     async rename(id: number, newFilename: string) {
-        const media = await this.mediaRepository.findOne({ where: { id } });
-        if (!media) {
-            throw new Error('Media not found');
+                const media = await this.mediaRepository.findOne({ where: { id } });
+                if (!media) {
+                    throw new Error('Media not found');
+                }
+                media.filename = newFilename;
+                return this.mediaRepository.save(media);
+            }
         }
-        media.filename = newFilename;
-        return this.mediaRepository.save(media);
-    }
-}

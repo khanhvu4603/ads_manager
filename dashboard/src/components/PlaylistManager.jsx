@@ -70,7 +70,8 @@ function PlaylistManager() {
         try {
             const newItem = {
                 url: mediaItem.url,
-                duration: mediaItem.mimeType.startsWith('image/') ? 10 : 0,
+                url: mediaItem.url,
+                duration: mediaItem.duration || (mediaItem.mimeType.startsWith('image/') ? 10 : 0),
                 type: mediaItem.mimeType.startsWith('image/') ? 'image' : 'video',
                 filename: mediaItem.filename
             };

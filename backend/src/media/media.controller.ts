@@ -23,7 +23,7 @@ export class MediaController {
             return this.mediaService.create(undefined, mediaUrl);
         }
         const result = await this.cloudinaryService.uploadFile(file);
-        return this.mediaService.saveCloudinaryMedia(file, result.secure_url);
+        return this.mediaService.saveCloudinaryMedia(file, result.secure_url, result.duration);
     }
 
     @Get()

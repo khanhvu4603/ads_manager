@@ -12,6 +12,12 @@ export class Media {
     url: string;
 
     @Column()
+    size: number;
+
+    @Column({ type: 'float', default: 0 })
+    duration: number;
+
+    @Column()
     mimeType: string;
 
     @CreateDateColumn()
