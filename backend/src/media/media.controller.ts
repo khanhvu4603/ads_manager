@@ -1,28 +1,29 @@
 import { Controller, Get, Post, Param, Delete, Patch, UseInterceptors, UploadedFile, Body } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MediaService } from './media.service';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { CloudinaryService } from './cloudinary.service';
+import { memoryStorage } from 'multer';
 
 @Controller('media')
 export class MediaController {
-    constructor(private readonly mediaService: MediaService) { }
+    constructor(
+        private readonly mediaService: MediaService,
+        private readonly cloudinaryService: CloudinaryService
+    ) { }
 
     @Post('upload')
     @UseInterceptors(FileInterceptor('file', {
-        storage: diskStorage({
-            destination: './uploads',
-            filename: (req, file, cb) => {
-                const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
-                return cb(null, `${randomName}${extname(file.originalname)}`);
-            },
-        }),
+        storage: memoryStorage(),
     }))
-    uploadFile(
+    async uploadFile(
         @UploadedFile() file: Express.Multer.File,
         @Body('media_url') mediaUrl?: string
     ) {
-        return this.mediaService.create(file, mediaUrl);
+        if (mediaUrl) {
+            return this.mediaService.create(undefined, mediaUrl);
+        }
+        const result = await this.cloudinaryService.uploadFile(file);
+        return this.mediaService.saveCloudinaryMedia(file, result.secure_url);
     }
 
     @Get()

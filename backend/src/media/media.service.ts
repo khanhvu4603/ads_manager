@@ -42,6 +42,16 @@ export class MediaService {
         return this.mediaRepository.save(media);
     }
 
+    saveCloudinaryMedia(file: Express.Multer.File, url: string) {
+        const mediaData = {
+            filename: file.originalname,
+            url: url,
+            mimeType: file.mimetype,
+        };
+        const media = this.mediaRepository.create(mediaData);
+        return this.mediaRepository.save(media);
+    }
+
     findAll() {
         return this.mediaRepository.find();
     }
