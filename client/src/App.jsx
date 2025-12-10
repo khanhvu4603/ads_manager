@@ -15,6 +15,8 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
 
+  const [serverTimeOffset, setServerTimeOffset] = useState(0);
+
   useEffect(() => {
     initializeDevice();
   }, []);
@@ -41,6 +43,14 @@ function App() {
       if (id) {
         socket.emit('register-device', { deviceId: id });
       }
+      // Request server time for sync
+      socket.emit('request-server-time');
+    });
+
+    socket.on('server-time', ({ timestamp }) => {
+      const offset = timestamp - Date.now();
+      console.log('Server time offset:', offset, 'ms');
+      setServerTimeOffset(offset);
     });
 
     socket.on('playlistDeployed', (playlist) => {
@@ -84,7 +94,8 @@ function App() {
     if (!mediaItems.length) return;
 
     const interval = setInterval(() => {
-      const now = Date.now() / 1000; // Unix timestamp in seconds
+      // Use Server Time instead of Local Time
+      const now = (Date.now() + serverTimeOffset) / 1000; // Unix timestamp in seconds
 
       // Calculate total cycle duration
       const totalDuration = mediaItems.reduce((acc, item) => acc + (item.duration || 10), 0);

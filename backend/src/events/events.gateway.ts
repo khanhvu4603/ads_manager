@@ -43,6 +43,11 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return 'identified';
   }
 
+  @SubscribeMessage('request-server-time')
+  handleRequestServerTime(@ConnectedSocket() client: Socket) {
+    client.emit('server-time', { timestamp: Date.now() });
+  }
+
   notifyPlaylistUpdate(deviceId: string, playlistId: number) {
     this.server.emit(`playlist-update-${deviceId}`, { playlistId });
     this.server.emit('playlist-update-all', { playlistId });
