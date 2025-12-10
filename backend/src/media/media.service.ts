@@ -19,11 +19,11 @@ export class MediaService {
 
         if (file) {
             // Priority: File upload
-            // Use originalname (user's custom name) instead of random filename
             mediaData = {
                 filename: file.originalname,
                 url: `/uploads/${file.filename}`,
                 mimeType: file.mimetype,
+                size: file.size
             };
         } else if (mediaUrl) {
             // Fallback: External URL
@@ -35,35 +35,57 @@ export class MediaService {
                 filename: filename,
                 url: mediaUrl,
                 mimeType: mimeType,
+                size: 0
             };
+        }
+
+        const media = this.mediaRepository.create(mediaData);
+        return this.mediaRepository.save(media);
+    }
+
+    async saveCloudinaryMedia(file: Express.Multer.File, url: string, duration: number = 0) {
+        const media = this.mediaRepository.create({
+            filename: file.originalname,
+            url: url,
+            mimeType: file.mimetype,
+            size: file.size,
+            duration: duration
+        });
+        return this.mediaRepository.save(media);
+    }
+
+    findAll() {
+        return this.mediaRepository.find({ order: { createdAt: 'DESC' } }); // Show newest first
+    }
+
     async remove(id: number) {
-                // Get the media record first to check if we need to delete a file
-                const media = await this.mediaRepository.findOne({ where: { id } });
+        // Get the media record first to check if we need to delete a file
+        const media = await this.mediaRepository.findOne({ where: { id } });
 
-                if (media && media.url.startsWith('/uploads/')) {
-                    // Delete the physical file (only for local uploads, not external URLs)
-                    const fs = require('fs');
-                    const path = require('path');
-                    const filePath = path.join(process.cwd(), 'uploads', path.basename(media.url));
+        if (media && media.url.startsWith('/uploads/')) {
+            // Delete the physical file (only for local uploads, not external URLs)
+            const fs = require('fs');
+            const path = require('path');
+            const filePath = path.join(process.cwd(), 'uploads', path.basename(media.url));
 
-                    try {
-                        if (fs.existsSync(filePath)) {
-                            fs.unlinkSync(filePath);
-                        }
-                    } catch (error) {
-                        console.error('Failed to delete file:', error);
-                    }
+            try {
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
                 }
-
-                return this.mediaRepository.delete(id);
-            }
-
-    async rename(id: number, newFilename: string) {
-                const media = await this.mediaRepository.findOne({ where: { id } });
-                if (!media) {
-                    throw new Error('Media not found');
-                }
-                media.filename = newFilename;
-                return this.mediaRepository.save(media);
+            } catch (error) {
+                console.error('Failed to delete file:', error);
             }
         }
+
+        return this.mediaRepository.delete(id);
+    }
+
+    async rename(id: number, newFilename: string) {
+        const media = await this.mediaRepository.findOne({ where: { id } });
+        if (!media) {
+            throw new Error('Media not found');
+        }
+        media.filename = newFilename;
+        return this.mediaRepository.save(media);
+    }
+}
