@@ -140,6 +140,12 @@ function MediaLibrary() {
         }
     };
 
+    const getMediaUrl = (url) => {
+        if (!url) return '';
+        if (url.startsWith('http')) return url;
+        return `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${url}`;
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -169,10 +175,10 @@ function MediaLibrary() {
                         <Card key={item.id} className="group overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300">
                             <div className="relative aspect-video bg-gray-900">
                                 {item.mimeType?.startsWith('image/') ? (
-                                    <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${item.url}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt={item.filename} />
+                                    <img src={getMediaUrl(item.url)} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt={item.filename} />
                                 ) : (
                                     <>
-                                        <video src={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${item.url}`} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" />
+                                        <video src={getMediaUrl(item.url)} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" />
                                         <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm">
                                             <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/50">
                                                 <Play className="w-5 h-5 text-white fill-white" />
@@ -210,9 +216,9 @@ function MediaLibrary() {
             {/* Upload Modal */}
             {showUploadModal && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => setShowUploadModal(false)}>
-                    <div className="bg-white rounded-2xl p-6 max-w-lg w-full mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-lg w-full mx-4 shadow-2xl transition-colors" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-6">
-                            <h3 className="text-xl font-bold">Add New Media</h3>
+                            <h3 className="text-xl font-bold dark:text-white">Add New Media</h3>
                             <button onClick={() => setShowUploadModal(false)} className="text-gray-400 hover:text-gray-600">
                                 <X className="w-6 h-6" />
                             </button>
@@ -220,8 +226,8 @@ function MediaLibrary() {
 
                         {/* File Upload Area */}
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Upload File</label>
-                            <div className="relative border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-blue-400 transition-colors bg-gray-50">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Upload File</label>
+                            <div className="relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 hover:border-blue-400 dark:hover:border-blue-400 transition-colors bg-gray-50 dark:bg-gray-900/50">
                                 <input
                                     type="file"
                                     accept="image/*,video/*"
@@ -254,7 +260,7 @@ function MediaLibrary() {
                         {/* Custom Filename Input (only show when file is selected) */}
                         {selectedFile && (
                             <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Tên file</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tên file</label>
                                 <div className="flex items-center gap-2">
                                     <input
                                         key="filename-input"
@@ -262,15 +268,15 @@ function MediaLibrary() {
                                         value={customFilename}
                                         onChange={(e) => setCustomFilename(e.target.value)}
                                         placeholder="Nhập tên file"
-                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400"
                                         disabled={uploading}
                                         autoFocus
                                     />
-                                    <span className="text-sm text-gray-500 font-mono bg-gray-100 px-2 py-2 rounded">
+                                    <span className="text-sm text-gray-500 dark:text-gray-400 font-mono bg-gray-100 dark:bg-gray-700 px-2 py-2 rounded">
                                         {selectedFile.name.substring(selectedFile.name.lastIndexOf('.'))}
                                     </span>
                                 </div>
-                                <p className="text-xs text-gray-500 mt-1">Tên hiển thị trong thư viện media</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Tên hiển thị trong thư viện media</p>
                             </div>
                         )}
 
@@ -283,7 +289,7 @@ function MediaLibrary() {
 
                         {/* URL Input */}
                         <div className="mb-6">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 <LinkIcon className="w-4 h-4 inline mr-1" />
                                 Media URL (External)
                             </label>
@@ -298,7 +304,7 @@ function MediaLibrary() {
                                     }
                                 }}
                                 placeholder="https://example.com/video.mp4"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400"
                                 disabled={uploading}
                             />
                             <p className="text-xs text-gray-500 mt-1">Enter a direct URL to a video or image</p>
@@ -330,9 +336,9 @@ function MediaLibrary() {
             {/* Edit Modal */}
             {showEditModal && editingMedia && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => setShowEditModal(false)}>
-                    <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl transition-colors" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-6">
-                            <h3 className="text-xl font-bold">Edit Media</h3>
+                            <h3 className="text-xl font-bold dark:text-white">Edit Media</h3>
                             <button onClick={() => setShowEditModal(false)} className="text-gray-400 hover:text-gray-600">
                                 <X className="w-6 h-6" />
                             </button>
@@ -341,20 +347,20 @@ function MediaLibrary() {
                         {/* Preview */}
                         <div className="mb-4 bg-gray-900 rounded-xl overflow-hidden aspect-video">
                             {editingMedia.mimeType?.startsWith('image/') ? (
-                                <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${editingMedia.url}`} className="w-full h-full object-cover" alt={editingMedia.filename} />
+                                <img src={getMediaUrl(editingMedia.url)} className="w-full h-full object-cover" alt={editingMedia.filename} />
                             ) : (
-                                <video src={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}${editingMedia.url}`} className="w-full h-full object-cover" controls />
+                                <video src={getMediaUrl(editingMedia.url)} className="w-full h-full object-cover" controls />
                             )}
                         </div>
 
                         {/* Rename Input */}
                         <div className="mb-6">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Tên file</label>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tên file</label>
                             <input
                                 type="text"
                                 value={newFilename}
                                 onChange={(e) => setNewFilename(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400"
                                 placeholder="Nhập tên file mới"
                             />
                         </div>
