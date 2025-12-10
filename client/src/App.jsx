@@ -79,37 +79,64 @@ function App() {
     }
   };
 
-  const handleNext = () => {
-    setPlayIndex((prev) => prev + 1); // Always increment to trigger effect
-  };
-
-  // Derived current index
-  const currentIndex = mediaItems.length > 0 ? playIndex % mediaItems.length : 0;
-
-  // Auto-advance logic
+  // Sync Engine
   useEffect(() => {
     if (!mediaItems.length) return;
 
-    const currentItem = mediaItems[currentIndex];
+    const interval = setInterval(() => {
+      const now = Date.now() / 1000; // Unix timestamp in seconds
 
-    if (currentItem.type === 'image') {
-      const duration = (currentItem.duration || 5) * 1000;
-      const timer = setTimeout(() => {
-        handleNext();
-      }, duration);
-      return () => clearTimeout(timer);
-    }
+      // Calculate total cycle duration
+      const totalDuration = mediaItems.reduce((acc, item) => acc + (item.duration || 10), 0);
 
-    // For video, we wait for onEnded event
-    if (currentItem.type === 'video' && videoRef.current) {
-      videoRef.current.play().catch(e => console.error("Autoplay failed", e));
-    }
-  }, [playIndex, mediaItems]); // Depend on playIndex, not currentIndex
+      if (totalDuration === 0) return;
+
+      // Find current position in cycle
+      const currentCycleTime = now % totalDuration;
+
+      let accumulatedTime = 0;
+      let foundIndex = 0;
+      let seekTime = 0;
+
+      for (let i = 0; i < mediaItems.length; i++) {
+        const itemDuration = mediaItems[i].duration || 10;
+        if (currentCycleTime >= accumulatedTime && currentCycleTime < accumulatedTime + itemDuration) {
+          foundIndex = i;
+          seekTime = currentCycleTime - accumulatedTime;
+          break;
+        }
+        accumulatedTime += itemDuration;
+      }
+
+      // Sync State
+      if (foundIndex !== playIndex) {
+        setPlayIndex(foundIndex);
+        setIsPlaying(true);
+      }
+
+      // Sync Video Seek (drift correction)
+      if (mediaItems[foundIndex].type === 'video' && videoRef.current) {
+        const video = videoRef.current;
+        // Only seek if drift is > 0.5s to avoid stuttering
+        if (Math.abs(video.currentTime - seekTime) > 0.5) {
+          console.log(`Syncing video: drift ${Math.abs(video.currentTime - seekTime).toFixed(2)}s`);
+          video.currentTime = seekTime;
+          // Ensure playing
+          if (video.paused) video.play().catch(() => { });
+        }
+      }
+    }, 1000); // Check every second
+
+    return () => clearInterval(interval);
+  }, [mediaItems, playIndex]);
+
+  // Derived current index (Simplified)
+  const currentIndex = playIndex;
 
   return (
     <div className="bg-black h-screen w-screen flex items-center justify-center overflow-hidden relative">
       <StatusBar />
-      {mediaItems.length > 0 ? (
+      {mediaItems.length > 0 && mediaItems[currentIndex] ? (
         <>
           {mediaItems[currentIndex].type === 'image' ? (
             <img
@@ -119,14 +146,14 @@ function App() {
             />
           ) : (
             <video
-              key={playIndex}
+              key={mediaItems[currentIndex].url} // Remount on URL change mainly
               ref={videoRef}
               src={mediaItems[currentIndex].url}
               className="w-full h-full object-contain"
-              onEnded={handleNext}
               muted
               autoPlay
               playsInline
+            // Remove onEnded handling as it interacts poorly with Global Sync
             />
           )}
         </>

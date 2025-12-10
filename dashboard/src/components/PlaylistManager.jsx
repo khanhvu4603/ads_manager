@@ -383,18 +383,16 @@ function PlaylistManager() {
                                                             <div className="font-medium text-sm text-gray-900 dark:text-gray-100 truncate" title={item.filename}>{item.filename}</div>
                                                             <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
                                                                 <span className="uppercase bg-gray-100 dark:bg-gray-700 px-1.5 rounded">{item.type}</span>
-                                                                {item.type === 'image' && (
-                                                                    <div className="flex items-center gap-1">
-                                                                        <span>Duration:</span>
-                                                                        <input
-                                                                            type="number"
-                                                                            className="w-12 px-1 py-0.5 border rounded text-center bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                                                                            value={item.duration}
-                                                                            onChange={(e) => handleUpdateDuration(selectedPlaylist, idx, e.target.value)}
-                                                                        />
-                                                                        <span>s</span>
-                                                                    </div>
-                                                                )}
+                                                                <div className="flex items-center gap-1">
+                                                                    <span>Duration:</span>
+                                                                    <input
+                                                                        type="number"
+                                                                        className="w-12 px-1 py-0.5 border rounded text-center bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                                                                        value={item.duration || (item.type === 'video' ? 0 : 5)}
+                                                                        onChange={(e) => handleUpdateDuration(selectedPlaylist, idx, e.target.value)}
+                                                                    />
+                                                                    <span>s</span>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div className="flex items-center gap-1">
